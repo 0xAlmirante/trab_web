@@ -71,3 +71,69 @@ func ShowCar(w http.ResponseWriter, r *http.Request) {
         w.Write([]byte("Não exista carro cadastrado"))
     }
 }
+
+func UpdateCar(w http.ResponseWriter, r *http.Request) {
+    if r.Method != "POST" {
+        w.Write([]byte("UpdateCar tem que ser POST"))
+        return
+    }
+
+    bodyDecoder := json.NewDecoder(r.Body)
+    var carro models.Car
+    bodyDecoder.Decode(&carro)
+
+    if carro.Id <= 0 {
+        w.Write([]byte("ID do carro precisa ser informado"))
+        return
+    }
+
+    if carro.Marca == "" || carro.Nome == "" || carro.Placa == "" {
+        w.Write([]byte("Nome, Marca e Placa do carro precisa ser informado"))
+        return
+    }
+
+    if carro.Preco <= 0 {
+        w.Write([]byte("Preco deve ser positivo"))
+        return
+    }
+
+    result, err := mysql.Update(carro.Id, carro.Marca, carro.Nome, carro.Placa, carro.Preco, carro.Vendido)
+
+    if err != nil {
+        w.Write([]byte(err.Error()))
+        return
+    }
+
+    if result {
+        w.Write([]byte(fmt.Sprintf("Carro atualizado id: %d", carro.Id)))
+    } else {
+        w.Write([]byte("ID do carro está errado ou precisa informa 1 dado para atualizar"))
+    }
+}
+
+func DeleteCar(w http.ResponseWriter, r *http.Request) {
+    if r.Method != "POST" {
+        w.Write([]byte("DeleteCar tem que ser POST"))
+        return
+    }
+
+    id, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+    if err != nil || id <= 0 {
+        w.Write([]byte("ID esta incorreto"))
+        return
+    }
+
+    result, err := mysql.Delete(id)
+
+    if err != nil {
+        w.Write([]byte(err.Error()))
+        return
+    }
+
+    if result {
+        w.Write([]byte(fmt.Sprintf("Carro deletado id: %d", id)))
+    } else {
+        w.Write([]byte("Carro não encontrado"))
+    }
+}
