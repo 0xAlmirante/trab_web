@@ -1,10 +1,10 @@
 ## Comandos para funcionamento do projeto
 
 #### Cria a base de dados 
-CREATE DATABASE IF NOT EXISTS poo_avancado_web
+```CREATE DATABASE IF NOT EXISTS poo_avancado_web```
 
 #### Seleciona a base de dados
-USE poo_avancado_web
+```USE poo_avancado_web```
 
 #### Cria a tabela
 
@@ -20,4 +20,4 @@ CREATE TABLE IF NOT EXISTS carros (
 ```
 
 #### Inicia a imagem docker do projeto
-docker run -p 3306:3306 --name golang_sql -e MYSQL_ROOT_PASSWORD=1234 -d mysql:8.0.29
+```docker run -p 3306:3306 --name golang_sql -e MYSQL_ROOT_PASSWORD=1234 -d mysql:8.0.29```
